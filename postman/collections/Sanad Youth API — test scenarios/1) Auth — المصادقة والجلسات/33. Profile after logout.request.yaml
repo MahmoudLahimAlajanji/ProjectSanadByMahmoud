@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{base}}/auth/profile"
+method: GET
+headers:
+  Authorization: Bearer {{tmp_access}}
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 401', function () { pm.expect(pm.response.code).to.be.oneOf([401]); });
+    language: text/javascript
+order: 18000

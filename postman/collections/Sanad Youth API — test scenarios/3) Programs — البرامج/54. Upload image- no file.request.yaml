@@ -1,0 +1,18 @@
+$kind: http-request
+name: "54. Upload image: no file"
+description: مرّر أي حقل نصي بدون ملف. ممكن يرجع 400 من الـ whitelist أو من "image is required"، الاتنين صح.
+url: "{{base}}/programs/{{programId}}/image"
+method: POST
+headers:
+  Authorization: Bearer {{sup1_token}}
+body:
+  type: formdata
+  content:
+    - type: text
+      key: dummy
+      value: x
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 400', function () { pm.expect(pm.response.code).to.be.oneOf([400]); });
+    language: text/javascript
+order: 12000

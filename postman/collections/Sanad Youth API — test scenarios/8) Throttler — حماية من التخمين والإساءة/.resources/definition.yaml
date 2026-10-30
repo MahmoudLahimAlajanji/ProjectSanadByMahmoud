@@ -1,0 +1,3 @@
+$kind: collection
+description: لازم THROTTLE_DISABLED=false (أو احذفه من .env) وأعد تشغيل السيرفر.
+order: 9000

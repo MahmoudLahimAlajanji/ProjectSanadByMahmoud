@@ -1,0 +1,15 @@
+# Use this workspace to collaborate
+workspace:
+  id: 5766bd1f-b437-4d64-8e66-78b7dd18ee47
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/Sanad Youth API — test scenarios: fc10f997-b052-4cb0-9625-b967774d8dc3
+
+# All resources in the `postman/` folder are automatically registered in Local View.
+# Point to additional files outside the `postman/` folder to register them individually. Example:
+#localResources:
+#  collections:
+#    - ../tests/E2E Test Collection/

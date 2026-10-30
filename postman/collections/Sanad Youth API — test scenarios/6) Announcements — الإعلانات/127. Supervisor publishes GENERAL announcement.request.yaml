@@ -1,0 +1,19 @@
+$kind: http-request
+description: العامة للأدمن بس.
+url: "{{base}}/announcements"
+method: POST
+headers:
+  Authorization: Bearer {{sup1_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Fake general",
+      "content": "x"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 403', function () { pm.expect(pm.response.code).to.be.oneOf([403]); });
+    language: text/javascript
+order: 2000

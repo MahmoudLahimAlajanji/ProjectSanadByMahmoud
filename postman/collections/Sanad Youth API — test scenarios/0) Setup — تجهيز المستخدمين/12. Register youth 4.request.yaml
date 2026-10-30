@@ -1,0 +1,25 @@
+$kind: http-request
+url: "{{base}}/auth/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "firstName": "Youth4",
+      "lastName": "Test",
+      "email": "youth4@test.com",
+      "username": "youth4",
+      "password": "Pass@12345",
+      "Phone": "0999000004"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201 or 409', function () { pm.expect(pm.response.code).to.be.oneOf([201, 409]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('y4_id', json.id);
+      pm.test("role is YOUTH (when created)", function () { if (pm.response.code === 201) pm.expect(json.role).to.eql('YOUTH'); });
+    language: text/javascript
+order: 12000

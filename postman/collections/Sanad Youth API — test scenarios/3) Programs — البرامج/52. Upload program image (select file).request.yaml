@@ -1,0 +1,20 @@
+$kind: http-request
+description: اختار صورة jpg/png/webp أقل من 2MB. الملف بينحفظ على القرص والـ DB فيها المسار بس.
+url: "{{base}}/programs/{{programId}}/image"
+method: POST
+headers:
+  Authorization: Bearer {{sup1_token}}
+body:
+  type: formdata
+  content:
+    - type: file
+      key: image
+      src: []
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', function () { pm.expect(pm.response.code).to.be.oneOf([201]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      pm.test("imageUrl set", function () { pm.expect(json.imageUrl).to.include('/uploads/programs/'); });
+    language: text/javascript
+order: 10000

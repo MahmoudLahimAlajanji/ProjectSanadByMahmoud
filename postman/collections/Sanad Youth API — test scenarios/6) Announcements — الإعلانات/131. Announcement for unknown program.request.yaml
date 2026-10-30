@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{base}}/announcements"
+method: POST
+headers:
+  Authorization: Bearer {{admin_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "x",
+      "content": "x",
+      "programId": 999999
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 404', function () { pm.expect(pm.response.code).to.be.oneOf([404]); });
+    language: text/javascript
+order: 6000

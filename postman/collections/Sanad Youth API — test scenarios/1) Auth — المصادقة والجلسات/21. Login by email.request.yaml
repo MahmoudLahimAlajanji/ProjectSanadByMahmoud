@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{base}}/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "identifier": "youth1@test.com",
+      "password": "Pass@12345"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', function () { pm.expect(pm.response.code).to.be.oneOf([201]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('tmp_access', json.access_token);
+      if (pm.response.code < 300) pm.collectionVariables.set('tmp_refresh', json.refresh_token);
+      pm.test("returns both tokens", function () { pm.expect(json.access_token).to.be.a('string'); pm.expect(json.refresh_token).to.be.a('string'); });
+    language: text/javascript
+order: 6000

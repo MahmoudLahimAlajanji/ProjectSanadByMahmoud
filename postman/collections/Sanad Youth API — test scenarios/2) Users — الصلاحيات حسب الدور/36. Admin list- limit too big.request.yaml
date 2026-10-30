@@ -1,0 +1,15 @@
+$kind: http-request
+name: "36. Admin list: limit too big"
+description: الحد الأقصى 100.
+url: "{{base}}/users?page=1&limit=1000"
+method: GET
+headers:
+  Authorization: Bearer {{admin_token}}
+queryParams:
+  page: "1"
+  limit: "1000"
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 400', function () { pm.expect(pm.response.code).to.be.oneOf([400]); });
+    language: text/javascript
+order: 2000

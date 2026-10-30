@@ -1,0 +1,18 @@
+$kind: http-request
+name: "139. Edit: try to change programId"
+url: "{{base}}/announcements/{{annProgId}}"
+method: PATCH
+headers:
+  Authorization: Bearer {{sup1_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "programId": 1
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 400', function () { pm.expect(pm.response.code).to.be.oneOf([400]); });
+    language: text/javascript
+order: 14000

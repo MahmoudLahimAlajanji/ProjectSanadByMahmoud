@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{base}}/programs/{{programId}}/materials"
+method: POST
+headers:
+  Authorization: Bearer {{sup1_token}}
+body:
+  type: formdata
+  content:
+    - type: text
+      key: title
+      value: Week 1 slides
+    - type: file
+      key: file
+      src: []
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', function () { pm.expect(pm.response.code).to.be.oneOf([201]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('materialId', json.id);
+      pm.test("internal file name not exposed", function () { pm.expect(json).to.not.have.property('fileName'); });
+    language: text/javascript
+order: 1000

@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{base}}/programs"
+method: POST
+headers:
+  Authorization: Bearer {{sup1_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Intro to React (online)",
+      "description": "Online workshop",
+      "seats": 30,
+      "startsAt": "2027-02-01T17:00:00.000Z",
+      "onlineUrl": "https://meet.google.com/abc-defg-hij"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', function () { pm.expect(pm.response.code).to.be.oneOf([201]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('program2Id', json.id);
+    language: text/javascript
+order: 2000

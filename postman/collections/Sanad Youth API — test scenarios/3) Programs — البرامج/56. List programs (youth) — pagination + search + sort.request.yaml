@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{base}}/programs?page=1&limit=5&search=nest&sortBy=title&sortOrder=asc"
+method: GET
+headers:
+  Authorization: Bearer {{y1_token}}
+queryParams:
+  page: "1"
+  limit: "5"
+  search: nest
+  sortBy: title
+  sortOrder: asc
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', function () { pm.expect(pm.response.code).to.be.oneOf([200]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      pm.test("has data + meta", function () { pm.expect(json.data).to.be.an('array'); pm.expect(json.meta.limit).to.eql(5); });
+      pm.test("supervisor name only (no password/email)", function () { const s = json.data[0].supervisor; pm.expect(s).to.have.all.keys('id','firstName','lastName'); });
+      pm.test("seatsLeft present", function () { pm.expect(json.data[0]).to.have.property('seatsLeft'); });
+    language: text/javascript
+order: 14000

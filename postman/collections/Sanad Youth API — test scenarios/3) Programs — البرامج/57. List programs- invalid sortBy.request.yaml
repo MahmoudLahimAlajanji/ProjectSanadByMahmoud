@@ -1,0 +1,13 @@
+$kind: http-request
+name: "57. List programs: invalid sortBy"
+url: "{{base}}/programs?sortBy=password"
+method: GET
+headers:
+  Authorization: Bearer {{y1_token}}
+queryParams:
+  sortBy: password
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 400', function () { pm.expect(pm.response.code).to.be.oneOf([400]); });
+    language: text/javascript
+order: 15000

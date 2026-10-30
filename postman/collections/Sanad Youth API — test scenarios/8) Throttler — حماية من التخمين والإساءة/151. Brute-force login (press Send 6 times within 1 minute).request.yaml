@@ -1,0 +1,18 @@
+$kind: http-request
+description: أول 5 مرات 401، السادسة 429 Too Many Requests. نفس الشي للـ register (5/دقيقة) والتقديم (5/دقيقة).
+url: "{{base}}/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "identifier": "youth1@test.com",
+      "password": "wrong-password"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 401 or 429', function () { pm.expect(pm.response.code).to.be.oneOf([401, 429]); });
+    language: text/javascript
+order: 1000

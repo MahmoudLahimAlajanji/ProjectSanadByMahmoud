@@ -1,0 +1,17 @@
+$kind: http-request
+name: "86. Supervisor 1: applications of his program"
+url: "{{base}}/applications?programId={{programId}}&status=PENDING"
+method: GET
+headers:
+  Authorization: Bearer {{sup1_token}}
+queryParams:
+  programId: "{{programId}}"
+  status: PENDING
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', function () { pm.expect(pm.response.code).to.be.oneOf([200]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      pm.test("2 pending", function () { pm.expect(json.meta.total).to.eql(2); });
+    language: text/javascript
+order: 16000

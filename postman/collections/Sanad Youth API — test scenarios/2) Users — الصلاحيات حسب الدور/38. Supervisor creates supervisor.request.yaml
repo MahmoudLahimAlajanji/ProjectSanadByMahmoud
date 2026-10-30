@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{base}}/users/supervisors"
+method: POST
+headers:
+  Authorization: Bearer {{sup1_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "firstName": "Supervisor9",
+      "lastName": "Test",
+      "email": "sup9@test.com",
+      "username": "sup9",
+      "password": "Pass@12345",
+      "Phone": "0988000009"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 403', function () { pm.expect(pm.response.code).to.be.oneOf([403]); });
+    language: text/javascript
+order: 4000

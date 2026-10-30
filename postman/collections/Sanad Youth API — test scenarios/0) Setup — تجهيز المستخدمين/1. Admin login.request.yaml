@@ -1,0 +1,21 @@
+$kind: http-request
+description: "الأدمن بيتعمل تلقائيًا من الـ Seed (ADMIN_EMAIL / ADMIN_PASSWORD من .env). لاحظ: الـ login بيرجع 201 لأنه POST."
+url: "{{base}}/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "identifier": "{{admin_email}}",
+      "password": "{{admin_password}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', function () { pm.expect(pm.response.code).to.be.oneOf([201]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('admin_token', json.access_token);
+    language: text/javascript
+order: 1000

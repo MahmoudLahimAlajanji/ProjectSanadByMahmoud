@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{base}}/auth/logout-others"
+method: POST
+headers:
+  Authorization: Bearer {{y1_token}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', function () { pm.expect(pm.response.code).to.be.oneOf([201]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      pm.test("has revoked count", function () { pm.expect(json.revoked).to.be.a('number'); });
+    language: text/javascript
+order: 19000

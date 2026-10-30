@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{base}}/programs/abc"
+method: GET
+headers:
+  Authorization: Bearer {{y1_token}}
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 400', function () { pm.expect(pm.response.code).to.be.oneOf([400]); });
+    language: text/javascript
+order: 18000

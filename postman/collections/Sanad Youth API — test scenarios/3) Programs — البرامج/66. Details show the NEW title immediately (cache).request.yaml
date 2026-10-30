@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{base}}/programs/{{programId}}"
+method: GET
+headers:
+  Authorization: Bearer {{y1_token}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', function () { pm.expect(pm.response.code).to.be.oneOf([200]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      pm.test("title updated", function () { pm.expect(json.title).to.include('updated'); });
+    language: text/javascript
+order: 24000

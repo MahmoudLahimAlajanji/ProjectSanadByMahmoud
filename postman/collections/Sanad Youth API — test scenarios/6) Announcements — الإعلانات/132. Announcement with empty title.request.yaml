@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{base}}/announcements"
+method: POST
+headers:
+  Authorization: Bearer {{admin_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "",
+      "content": "x"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 400', function () { pm.expect(pm.response.code).to.be.oneOf([400]); });
+    language: text/javascript
+order: 7000

@@ -1,0 +1,3 @@
+$kind: collection
+description: إنشاء، عرض مع Pagination وبحث، رفع صورة، تعديل، وعزل المشرفين عن بعض.
+order: 4000

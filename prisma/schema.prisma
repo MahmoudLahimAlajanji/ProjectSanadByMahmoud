@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  YOUTH
+  SUPERVISOR
+  ADMIN
+}
+
+enum ApplicationStatus {
+  PENDING //قيد المراجعة من قبل المشرف :-)  
+  ACCEPTED  
+  REJECTED  
+  CANCELLED 
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String   @unique
+  username  String   @unique
+  password  String
+  role      Role     @default(YOUTH)
+  createdAt DateTime @default(now())
+  Phone String?
+  authSessions  AuthSession[]
+  programs      Program[]      @relation("SupervisorPrograms")
+  applications  Application[]
+  announcements Announcement[]
+}
+
+
+model AuthSession {
+  id               String    @id @default(uuid())
+  userId           Int
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshTokenHash String
+  userAgent        String?
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  createdAt        DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Program {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  imageUrl    String?
+  seats       Int 
+  seatsLeft   Int 
+  isActive    Boolean  @default(true)
+  supervisorId Int
+  supervisor  User     @relation("SupervisorPrograms", fields: [supervisorId], references: [id])
+  createdAt   DateTime @default(now())
+  startsAt  DateTime
+  endsAt    DateTime?
+  location  String?
+  onlineUrl String?
+
+  applications  Application[]
+  announcements Announcement[]
+  material Material[]
+
+  @@index([title])
+  @@index([supervisorId])
+  @@index([isActive, createdAt])
+}
+
+
+
+model Application {
+  id        Int               @id @default(autoincrement())
+  userId    Int
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  programId Int
+  program   Program           @relation(fields: [programId], references: [id], onDelete: Cascade)
+  status    ApplicationStatus @default(PENDING)
+  cvFile    String? 
+  cvOriginalName String?
+  createdAt DateTime          @default(now())
+  decidedAt DateTime?
+
+  @@unique([userId, programId]) 
+  @@index([programId, status])
+}
+
+
+
+
+model Announcement {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  programId Int?
+  program   Program? @relation(fields: [programId], references: [id], onDelete: Cascade)
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([programId, createdAt])
+}
+
+model Material {
+  id           Int      @id @default(autoincrement())
+  programId    Int
+  program      Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  title        String
+  fileName     String
+  originalName String
+  mimeType     String
+  createdAt    DateTime @default(now())
+
+  @@index([programId])
+}

@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{base}}/programs"
+method: POST
+headers:
+  Authorization: Bearer {{y1_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Backend with NestJS",
+      "description": "Hands-on backend training program",
+      "seats": 2,
+      "startsAt": "2027-01-10T09:00:00.000Z",
+      "endsAt": "2027-01-10T12:00:00.000Z",
+      "location": "Damascus - Hall 2"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 403', function () { pm.expect(pm.response.code).to.be.oneOf([403]); });
+    language: text/javascript
+order: 6000

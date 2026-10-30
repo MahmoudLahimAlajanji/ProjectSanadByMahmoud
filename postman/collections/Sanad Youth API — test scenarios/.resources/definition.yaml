@@ -1,0 +1,7 @@
+$kind: collection
+description: شغّل المجلدات بالترتيب (0 → 8). الطلبات يلي فيها "select file" لازم تختار ملف قبل الإرسال.
+variables:
+  base: http://localhost:3000/api
+  admin_email: admin@sanad.org
+  admin_password: Admin@12345
+  admin_token: ""

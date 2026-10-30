@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{base}}/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "identifier": "sup2@test.com",
+      "password": "Pass@12345"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', function () { pm.expect(pm.response.code).to.be.oneOf([201]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('sup2_token', json.access_token);
+    language: text/javascript
+order: 5000

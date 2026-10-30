@@ -1,0 +1,21 @@
+$kind: http-request
+name: 45. Create without location/onlineUrl
+url: "{{base}}/programs"
+method: POST
+headers:
+  Authorization: Bearer {{sup1_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "X",
+      "description": "Y",
+      "seats": 5,
+      "startsAt": "2027-01-10T09:00:00.000Z"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 400', function () { pm.expect(pm.response.code).to.be.oneOf([400]); });
+    language: text/javascript
+order: 3000

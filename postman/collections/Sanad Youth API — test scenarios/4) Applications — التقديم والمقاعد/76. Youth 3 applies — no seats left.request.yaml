@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{base}}/applications"
+method: POST
+headers:
+  Authorization: Bearer {{y3_token}}
+body:
+  type: urlencoded
+  content:
+    programId: "{{programId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 409', function () { pm.expect(pm.response.code).to.be.oneOf([409]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      pm.test("message", function () { pm.expect(json.message).to.include('No seats'); });
+    language: text/javascript
+order: 6000

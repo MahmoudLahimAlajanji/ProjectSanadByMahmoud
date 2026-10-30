@@ -1,0 +1,18 @@
+$kind: http-request
+name: "41. Update my profile: bad phone"
+url: "{{base}}/users/me"
+method: PATCH
+headers:
+  Authorization: Bearer {{y1_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "Phone": "123"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 400', function () { pm.expect(pm.response.code).to.be.oneOf([400]); });
+    language: text/javascript
+order: 7000

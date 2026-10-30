@@ -1,0 +1,38 @@
+$kind: http-request
+url: "{{base}}/applications?programId={{dupProgramId}}"
+method: GET
+headers:
+  Authorization: Bearer {{admin_token}}
+queryParams:
+  programId: "{{dupProgramId}}"
+scripts:
+  - type: beforeRequest
+    code: |-
+      const base = pm.collectionVariables.get('base');
+      const pid = pm.collectionVariables.get('dupProgramId');
+      const users = [{ label: 'youth1 (click 1)', token: 'y1_token' }, { label: 'youth1 (click 2)', token: 'y1_token' }];
+      const fire = (u) => new Promise((resolve) => pm.sendRequest({
+        url: base + '/applications',
+        method: 'POST',
+        header: { Authorization: 'Bearer ' + pm.collectionVariables.get(u.token) },
+        body: { mode: 'urlencoded', urlencoded: [{ key: 'programId', value: String(pid) }] },
+      }, (err, res) => {
+        let body = {}; try { body = res.json(); } catch (e) {}
+        resolve({ who: u.label, code: res ? res.code : 'ERR', msg: body.message || body.status || String(err || '') });
+      }));
+      Promise.all(users.map(fire)).then((results) => {
+        console.log(results.map(r => r.who + ' -> ' + r.code + ' ' + r.msg).join('\n'));
+        pm.collectionVariables.set('dup', results.filter(r => r.code === 201).length);
+        pm.collectionVariables.set('duplost', results.filter(r => r.code === 409).length);
+      });
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', function () { pm.expect(pm.response.code).to.be.oneOf([200]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('dupAppId', json.data[0].id);
+      pm.test("one created", function () { pm.expect(pm.collectionVariables.get('dup')).to.eql(1); });
+      pm.test("one rejected as duplicate", function () { pm.expect(pm.collectionVariables.get('duplost')).to.eql(1); });
+      pm.test("only 1 application stored", function () { pm.expect(json.meta.total).to.eql(1); });
+    language: text/javascript
+order: 5000

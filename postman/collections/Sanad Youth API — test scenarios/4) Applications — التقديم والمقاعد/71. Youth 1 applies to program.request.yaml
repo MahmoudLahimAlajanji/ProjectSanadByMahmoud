@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{base}}/applications"
+method: POST
+headers:
+  Authorization: Bearer {{y1_token}}
+body:
+  type: urlencoded
+  content:
+    programId: "{{programId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', function () { pm.expect(pm.response.code).to.be.oneOf([201]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('app1Id', json.id);
+      pm.test("status PENDING", function () { pm.expect(json.status).to.eql('PENDING'); });
+    language: text/javascript
+order: 1000

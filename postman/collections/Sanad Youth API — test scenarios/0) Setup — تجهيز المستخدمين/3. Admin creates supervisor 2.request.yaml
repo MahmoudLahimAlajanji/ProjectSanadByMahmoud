@@ -1,0 +1,28 @@
+$kind: http-request
+description: 409 معناها المشرف موجود من تشغيل سابق، عادي.
+url: "{{base}}/users/supervisors"
+method: POST
+headers:
+  Authorization: Bearer {{admin_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "firstName": "Supervisor2",
+      "lastName": "Test",
+      "email": "sup2@test.com",
+      "username": "sup2",
+      "password": "Pass@12345",
+      "Phone": "0988000002"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201 or 409', function () { pm.expect(pm.response.code).to.be.oneOf([201, 409]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('sup2_id', json.id);
+      pm.test("role is SUPERVISOR (when created)", function () { if (pm.response.code === 201) pm.expect(json.role).to.eql('SUPERVISOR'); });
+      pm.test("password never returned", function () { pm.expect(JSON.stringify(json)).to.not.include('password'); });
+    language: text/javascript
+order: 3000

@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{base}}/users/me"
+method: PATCH
+headers:
+  Authorization: Bearer {{y1_token}}
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "firstName": "Ahmad",
+      "lastName": "Ali",
+      "Phone": "0999111222"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', function () { pm.expect(pm.response.code).to.be.oneOf([200]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      pm.test("password not returned", function () { pm.expect(json).to.not.have.property('password'); });
+    language: text/javascript
+order: 6000

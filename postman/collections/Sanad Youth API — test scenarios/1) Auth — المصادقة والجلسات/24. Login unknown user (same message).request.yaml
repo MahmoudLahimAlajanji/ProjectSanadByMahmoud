@@ -1,0 +1,18 @@
+$kind: http-request
+description: "نفس رسالة الخطأ بالحالتين: ما بنكشف إذا الإيميل موجود أو لا."
+url: "{{base}}/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "identifier": "nobody@test.com",
+      "password": "Pass@12345"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 401', function () { pm.expect(pm.response.code).to.be.oneOf([401]); });
+    language: text/javascript
+order: 9000

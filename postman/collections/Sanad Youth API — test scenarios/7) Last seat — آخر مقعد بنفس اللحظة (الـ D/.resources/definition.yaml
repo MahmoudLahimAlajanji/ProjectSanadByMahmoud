@@ -1,0 +1,4 @@
+$kind: collection
+name: 7) Last seat — آخر مقعد بنفس اللحظة (الـ Demo)
+description: "مهم: شغّل السيرفر مع THROTTLE_DISABLED=true وإلا رح تاخد 429 (التقديم محدود بـ 5 بالدقيقة). الـ pre-request script بيبعت الطلبات بنفس اللحظة، وشوف النتيجة بالـ Console (Ctrl+Alt+C)."
+order: 8000

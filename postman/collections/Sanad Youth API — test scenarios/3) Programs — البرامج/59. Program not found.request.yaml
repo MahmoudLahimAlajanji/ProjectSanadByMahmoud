@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{base}}/programs/999999"
+method: GET
+headers:
+  Authorization: Bearer {{y1_token}}
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 404', function () { pm.expect(pm.response.code).to.be.oneOf([404]); });
+    language: text/javascript
+order: 17000

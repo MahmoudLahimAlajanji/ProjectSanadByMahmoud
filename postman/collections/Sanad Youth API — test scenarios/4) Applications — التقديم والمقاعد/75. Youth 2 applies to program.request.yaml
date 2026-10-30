@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{base}}/applications"
+method: POST
+headers:
+  Authorization: Bearer {{y2_token}}
+body:
+  type: urlencoded
+  content:
+    programId: "{{programId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', function () { pm.expect(pm.response.code).to.be.oneOf([201]); });
+      let json = {}; try { json = pm.response.json(); } catch (e) {}
+      if (pm.response.code < 300) pm.collectionVariables.set('app2Id', json.id);
+    language: text/javascript
+order: 5000

@@ -15,7 +15,7 @@ async function bootstrap() {
 
   
   if (process.env.TRUST_PROXY === 'true') app.set('trust proxy', 1);
-
+  app.enableCors();
   app.setGlobalPrefix('api');
   app.enableCors({ origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : true });
   app.useStaticAssets(PUBLIC_DIR, { prefix: '/uploads' });
@@ -26,9 +26,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.useStaticAssets(join(process.cwd(), 'public-web'), { prefix: '/app' });
   app.enableShutdownHooks();
-  const port = process.env.PORT ?? 3000;
-  await app.listen(port);
-  console.log(`Sanad API running on http://localhost:${port}/api`);
+  await app.listen(3000, '0.0.0.0');
+  console.log(`Sanad API running on http://localhost:3000/api`);
 }
 bootstrap();
